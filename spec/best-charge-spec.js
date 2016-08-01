@@ -231,10 +231,9 @@ describe('Take out food', function () {
       totalPayPrice:24,
       totalSaved:12,
       chosenType:'指定菜品半价'
-    }
-
+    };
     expect(receipt).toEqual(expected);
-  })
+  });
 
   it('should generate best charge when best is 指定菜品半价', function() {
     let inputs = ["ITEM0001 x 1", "ITEM0013 x 2", "ITEM0022 x 1"];
