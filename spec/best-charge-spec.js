@@ -231,10 +231,10 @@ describe('Take out food', function () {
       totalPayPrice:24,
       totalSaved:12,
       chosenType:'指定菜品半价'
-    }
+    };
 
     expect(receipt).toEqual(expected);
-  })
+  });
 
   it('should generate best charge when best is 指定菜品半价', function() {
     let inputs = ["ITEM0001 x 1", "ITEM0013 x 2", "ITEM0022 x 1"];
@@ -249,7 +249,8 @@ describe('Take out food', function () {
 指定菜品半价(黄焖鸡，凉皮)，省13元
 -----------------------------------
 总计：25元
-===================================`.trim()
+===================================`.trim();
+    require('fs').writeFileSync('2.txt',expected);
     expect(summary).toEqual(expected)
   });
 
@@ -265,7 +266,7 @@ describe('Take out food', function () {
 满30减6元，省6元
 -----------------------------------
 总计：26元
-===================================`.trim()
+===================================`.trim();
     expect(summary).toEqual(expected)
   });
 
@@ -277,7 +278,7 @@ describe('Take out food', function () {
 肉夹馍 x 4 = 24元
 -----------------------------------
 总计：24元
-===================================`.trim()
+===================================`.trim();
     expect(summary).toEqual(expected)
   });
 
