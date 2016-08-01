@@ -1,6 +1,6 @@
 let loadAllItems = require('./items');
 let loadPromotions = require('./promotions');
-
+let _=require('lodash');
 function bestCharge(selectedItems) {
   let countedIds = countIds(selectedItems);
   let allItems = loadAllItems();
@@ -98,6 +98,61 @@ function buildReceipt(promotedItems,{totalPayPrice,totalSaved,chosenType}) {
 
 function buildReceiptString(receipt) {
   // TODO
+  let lines=['============= 订餐明细 ============='];
+  for(let item of receipt.receiptItems)
+  {
+    lines.push(`${item.name} x ${item.count} = ${item.payPrice+item.saved}元`);
+  }
+  lines.push('-----------------------------------');
+
+
+  if(receipt.chosenType==='')
+  {
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push('===================================');
+    let notes=lines.join('\n');
+    require(`fs`).writeFileSync('2.txt',notes);
+    return notes;
+  }
+  //let result=[];
+ let result= _.filter(receipt.receiptItems,(result)=>{
+    if(result.saved>0)
+    {
+      return result.name;
+    }
+
+  });
+  let names=_.map(result,({name})=>name);
+  // .vaule();
+  console.log(result);
+
+  if(receipt.chosenType==='指定菜品半价')
+  {
+    lines.push('使用优惠:');
+    lines.push(`${receipt.chosenType}(${names.join('，')})，省${receipt.totalSaved}元`);
+    lines.push('-----------------------------------');
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push('===================================');
+    let notes=lines.join('\n');
+    require(`fs`).writeFileSync('3.txt',notes);
+    return notes;
+  }
+
+  if(receipt.chosenType==='满30减6元')
+  {
+    lines.push('使用优惠:');
+    lines.push(`${receipt.chosenType}，省${receipt.totalSaved}元`);
+    lines.push('-----------------------------------');
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push('===================================');
+    let notes=lines.join('\n');
+    require(`fs`).writeFileSync('4.txt',notes);
+    return notes;
+  }
+
+  // let notes=lines.join('\n');
+  // require(`fs`).writeFileSync('2.txt',notes);
+  //return notes;
 }
 
 module.exports = {
