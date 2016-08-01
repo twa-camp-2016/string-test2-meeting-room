@@ -4,15 +4,15 @@ let loadPromotions = require('./promotions');
 function bestCharge(selectedItems) {
   let countedIds = countIds(selectedItems);
   let allItems = loadAllItems();
-  let cartItems = buildCartItems(countedIds,allItems);
+  let cartItems = buildCartItems(countedIds, allItems);
   let promotions = loadPromotions();
-  let promotedItems = buildPromotions(cartItems,promotions);
+  let promotedItems = buildPromotions(cartItems, promotions);
   let totalPrice = calculateTotalPrices(promotedItems);
 
-  let chosenTypePrice = chooseType(totalPrice,promotions);
-  let receipt = buildReceipt(promotedItems,chosenTypePrice);
+  let chosenTypePrice = chooseType(totalPrice, promotions);
+  let receipt = buildReceipt(promotedItems, chosenTypePrice);
   let receiptString = buildReceiptString(receipt);
-
+  require('fs').writeFileSync('1.txt', receiptString);
   return receiptString;
 }
 
@@ -55,49 +55,78 @@ function calculateTotalPrices(promotedItems) {
   }, {totalPayPrice: 0, totalSaved: 0})
 }
 
-function chooseType({totalPayPrice,totalSaved},promotions) {
-  let total = totalPayPrice+totalSaved;
-  let reachPromotion = total>=30 ? 6 :0;
+function chooseType({totalPayPrice, totalSaved}, promotions) {
+  let total = totalPayPrice + totalSaved;
+  let reachPromotion = total >= 30 ? 6 : 0;
   let reachPromotionString = promotions.find((promotion) => promotion.type === '满30减6元').type;
   let halfPriceString = promotions.find((promotion) => promotion.type === '指定菜品半价').type;
-  if(reachPromotion === 0){
+  if (reachPromotion === 0) {
     return {
-      totalPayPrice:totalPayPrice,
-      totalSaved:totalSaved,
-      chosenType:''
+      totalPayPrice: totalPayPrice,
+      totalSaved: totalSaved,
+      chosenType: ''
     }
-  }else if(reachPromotion > totalSaved){
+  } else if (reachPromotion > totalSaved) {
     return {
-      totalPayPrice:totalPayPrice+totalSaved-6,
-      totalSaved:6,
-      chosenType:reachPromotionString
+      totalPayPrice: totalPayPrice + totalSaved - 6,
+      totalSaved: 6,
+      chosenType: reachPromotionString
     }
-  }else {
+  } else {
     return {
-      totalPayPrice:totalPayPrice,
-      totalSaved:totalSaved,
-      chosenType:halfPriceString
+      totalPayPrice: totalPayPrice,
+      totalSaved: totalSaved,
+      chosenType: halfPriceString
     }
   }
 
 }
 
-function buildReceipt(promotedItems,{totalPayPrice,totalSaved,chosenType}) {
-  let receiptArray =[];
-  for(let promotedItem of promotedItems){
-      receiptArray.push({
-        name:promotedItem.name,
-        price:promotedItem.price,
-        count:promotedItem.count,
-        payPrice:promotedItem.payPrice,
-        saved:promotedItem.saved
-      });
+function buildReceipt(promotedItems, {totalPayPrice, totalSaved, chosenType}) {
+  let receiptArray = [];
+  for (let promotedItem of promotedItems) {
+    receiptArray.push({
+      name: promotedItem.name,
+      price: promotedItem.price,
+      count: promotedItem.count,
+      payPrice: promotedItem.payPrice,
+      saved: promotedItem.saved
+    });
   }
-  return {receiptItems:receiptArray,totalPayPrice,totalSaved,chosenType};
+  return {receiptItems: receiptArray, totalPayPrice, totalSaved, chosenType};
 }
 
+function getpromotionItems(receiptItems) {
+  let array = [];
+  for({name,saved}of receiptItems){
+    if(saved !== 0){
+      array.push(name);
+    }
+  }
+  return array;
+}
 function buildReceiptString(receipt) {
-  // TODO
+  let lines = ['============= 订餐明细 ============='];
+  for (let {name, count, price}of receipt.receiptItems) {
+    let line = `${name} x ${count} = ${count * price}元`;
+    lines.push(line);
+  }
+  lines.push('-----------------------------------');
+  if (receipt.chosenType === '指定菜品半价') {
+    let array = getpromotionItems(receipt.receiptItems);
+    lines.push('使用优惠:');
+    lines.push(`指定菜品半价(${array.join('，')})，省${receipt.totalSaved}元`);
+    lines.push('-----------------------------------');
+  } else if (receipt.chosenType === '满30减6元') {
+    lines.push('使用优惠:');
+    lines.push('满30减6元，省6元');
+    lines.push('-----------------------------------');
+  } else {
+  }
+  lines.push(`总计：${receipt.totalPayPrice}元`);
+  lines.push('===================================');
+  return lines.join('\n');
+
 }
 
 module.exports = {
