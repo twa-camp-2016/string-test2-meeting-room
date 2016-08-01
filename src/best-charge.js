@@ -12,6 +12,7 @@ function bestCharge(selectedItems) {
   let chosenTypePrice = chooseType(totalPrice,promotions);
   let receipt = buildReceipt(promotedItems,chosenTypePrice);
   let receiptString = buildReceiptString(receipt);
+  console.log(receiptString)
 
   return receiptString;
 }
@@ -97,7 +98,46 @@ function buildReceipt(promotedItems,{totalPayPrice,totalSaved,chosenType}) {
 }
 
 function buildReceiptString(receipt) {
-  // TODO
+  let lines = ['============= 订餐明细 ============='];
+
+  for(let receiptItem of receipt.receiptItems){
+    let line = `${receiptItem.name} x ${receiptItem.count} = ${receiptItem.price * receiptItem.count}元`;
+    lines.push(line);
+  }
+
+  let hasSaved = (receipt.totalSaved > 0);
+
+  if(hasSaved){
+    lines.push('-----------------------------------');
+    lines.push('使用优惠:');
+
+    if(receipt.totalSaved === 6){
+      lines.push('满30减6元，省6元');
+    }else{
+      let line = '';
+      for(let receiptItem of receipt.receiptItems){
+        if(receiptItem.saved !== 0){
+          line += `${receiptItem.name}`;
+          line +='，';
+        }
+      }
+      let s,newLine = "";
+      s = line.charAt(line.length-1);
+      if(s === '，'){
+        for(let i = 0 ; i< line.length - 1;i++){
+          newLine += line[i];
+        }
+      }
+      lines.push(`指定菜品半价(${newLine})，省${receipt.totalSaved}元`);
+    }
+  }
+  lines.push('-----------------------------------');
+  lines.push(`总计：${receipt.totalPayPrice}元`);
+  lines.push('===================================');
+
+  let receiptString = lines.join('\n');
+  require("fs").writeFileSync('./1.txt',receiptString)
+  return receiptString;
 }
 
 module.exports = {

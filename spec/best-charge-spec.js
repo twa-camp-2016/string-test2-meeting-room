@@ -250,6 +250,7 @@ describe('Take out food', function () {
 -----------------------------------
 总计：25元
 ===================================`.trim()
+    require("fs").writeFileSync('./2.txt',summary)
     expect(summary).toEqual(expected)
   });
 
@@ -266,6 +267,7 @@ describe('Take out food', function () {
 -----------------------------------
 总计：26元
 ===================================`.trim()
+    require('fs').writeFileSync('./3.txt',summary)
     expect(summary).toEqual(expected)
   });
 
@@ -278,6 +280,7 @@ describe('Take out food', function () {
 -----------------------------------
 总计：24元
 ===================================`.trim()
+    require("fs").writeFileSync('./4.txt',summary)
     expect(summary).toEqual(expected)
   });
 
