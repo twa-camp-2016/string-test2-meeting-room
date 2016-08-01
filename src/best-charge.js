@@ -12,7 +12,7 @@ function bestCharge(selectedItems) {
   let chosenTypePrice = chooseType(totalPrice,promotions);
   let receipt = buildReceipt(promotedItems,chosenTypePrice);
   let receiptString = buildReceiptString(receipt);
-
+  require('fs').writeFileSync('test1',receiptString);
   return receiptString;
 }
 
@@ -97,7 +97,36 @@ function buildReceipt(promotedItems,{totalPayPrice,totalSaved,chosenType}) {
 }
 
 function buildReceiptString(receipt) {
-  // TODO
+  let list = receipt.receiptItems.map(list => {
+    return `${list.name} x ${list.count} = ${list.price*list.count}元`
+  }).join('\n');
+  if(receipt.chosenType === '指定菜品半价'){
+    return `============= 订餐明细 =============
+${list}
+-----------------------------------
+使用优惠:
+指定菜品半价(黄焖鸡，凉皮)，省${receipt.totalSaved}元
+-----------------------------------
+总计：${receipt.totalPayPrice}元
+===================================`;
+  }
+  else if(receipt.chosenType === '满30减6元'){
+    return  `============= 订餐明细 =============
+${list}
+-----------------------------------
+使用优惠:
+满30减6元，省6元
+-----------------------------------
+总计：${receipt.totalPayPrice}元
+===================================`;
+  }
+  else {
+    return `============= 订餐明细 =============
+${list}
+-----------------------------------
+总计：${receipt.totalPayPrice}元
+===================================`;
+  }
 }
 
 module.exports = {
