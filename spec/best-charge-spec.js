@@ -251,6 +251,7 @@ describe('Take out food', function () {
 总计：25元
 ===================================`.trim()
     expect(summary).toEqual(expected)
+
   });
 
   it('should generate best charge when best is 满30减6元', function() {

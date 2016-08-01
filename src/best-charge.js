@@ -97,7 +97,37 @@ function buildReceipt(promotedItems,{totalPayPrice,totalSaved,chosenType}) {
 }
 
 function buildReceiptString(receipt) {
-  // TODO
+ let lines = ['============= 订餐明细 ============='];
+  if(receipt.chosenType==='指定菜品半价'){
+    let line = receipt.receiptItems.map(({name,count,payPrice,saved})=>{
+     return lines.push(`${name} x ${count} = ${payPrice+saved}元`)});
+    lines.push('-----------------------------------');
+    lines.push('使用优惠:');
+    let name = receipt.receiptItems.filter(({saved})=>saved>0).map(({name})=>name);
+    lines.push(`指定菜品半价(${name.join('，')})，省${receipt.totalSaved}元`);
+    lines.push('-----------------------------------');
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push(`===================================`);
+  }
+  if(receipt.chosenType==='满30减6元'){
+    let line = receipt.receiptItems.map(({name,count,payPrice,saved})=>{
+      return lines.push(`${name} x ${count} = ${payPrice+saved}元`)});
+    lines.push('-----------------------------------');
+    lines.push('使用优惠:');
+    lines.push(`满30减6元，省${receipt.totalSaved}元`);
+    lines.push('-----------------------------------');
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push(`===================================`);
+  }if(receipt.chosenType===''){
+    let line = receipt.receiptItems.map(({name,count,payPrice,saved})=>{
+      return lines.push(`${name} x ${count} = ${payPrice+saved}元`)});
+    lines.push('-----------------------------------');
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push(`===================================`);
+  }
+  let receiptString = lines.join('\n');
+  require('fs').writeFileSync('1.txt',receiptString);
+  return receiptString;
 }
 
 module.exports = {
