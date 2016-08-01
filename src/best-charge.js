@@ -97,7 +97,35 @@ function buildReceipt(promotedItems,{totalPayPrice,totalSaved,chosenType}) {
 }
 
 function buildReceiptString(receipt) {
-  // TODO
+    let lines = [`============= 订餐明细 =============`];
+    let line;
+    let lineItems = [];
+    for (let item of receipt.receiptItems) {
+      lines.push(`${item.name} x ${item.count} = ${item.count*item.price}元`);
+    }
+    if (receipt.chosenType ==='满30减6元') {
+      lines.push(`-----------------------------------`);
+      lines.push(`使用优惠:`);
+      lines.push(`满30减6元，省6元`);
+    }
+    if (receipt.chosenType === '指定菜品半价') {
+      lines.push(`-----------------------------------`);
+      lines.push(`使用优惠:`);
+      line = (`指定菜品半价(`);
+      for (let item of receipt.receiptItems) {
+        if(item.saved>0)
+          lineItems.push(item.name);
+      }
+      line += lineItems.join('，');
+      line += `)，省${receipt.totalSaved}元`;
+      lines.push(line);
+    }
+    lines.push(`-----------------------------------`);
+    lines.push(`总计：${receipt.totalPayPrice}元`);
+    lines.push(`===================================`);
+    return lines.join('\n');
+  //return lines;
+
 }
 
 module.exports = {

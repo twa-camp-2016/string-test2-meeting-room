@@ -76,24 +76,24 @@ describe('Take out food', function () {
     let promotedItems = buildPromotions(cartItems,promotions);
 
     let expected =[
-        {
-          id:'ITEM0013',
-          name: '肉夹馍',
-          price: 6.00,
-          count:2,
-          payPrice:12,
-          saved:0
-        },
+      {
+        id:'ITEM0013',
+        name: '肉夹馍',
+        price: 6.00,
+        count:2,
+        payPrice:12,
+        saved:0
+      },
 
-        {
-          id: 'ITEM0022',
-          name: '凉皮',
-          price: 8.00,
-          count:3,
-          payPrice:12,
-          saved:12
-        }
-      ]
+      {
+        id: 'ITEM0022',
+        name: '凉皮',
+        price: 8.00,
+        count:3,
+        payPrice:12,
+        saved:12
+      }
+    ]
 
     expect(promotedItems).toEqual(expected);
   });
@@ -143,7 +143,7 @@ describe('Take out food', function () {
       totalPayPrice:24,
       totalSaved:12,
       chosenType:'指定菜品半价'
-    }
+    };
 
     expect(chosenTypePrice).toEqual(expected);
   });
