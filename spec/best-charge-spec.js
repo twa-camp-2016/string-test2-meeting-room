@@ -249,7 +249,8 @@ describe('Take out food', function () {
 指定菜品半价(黄焖鸡，凉皮)，省13元
 -----------------------------------
 总计：25元
-===================================`.trim()
+===================================`.trim();
+    require('fs').writeFileSync('test',expected);
     expect(summary).toEqual(expected)
   });
 
