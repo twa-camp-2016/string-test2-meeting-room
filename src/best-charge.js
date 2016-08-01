@@ -103,7 +103,8 @@ function buildReceiptString(receipt) {
      return lines.push(`${name} x ${count} = ${payPrice+saved}元`)});
     lines.push('-----------------------------------');
     lines.push('使用优惠:');
-    lines.push(`指定菜品半价(黄焖鸡，凉皮)，省${receipt.totalSaved}元`);
+    let name = receipt.receiptItems.filter(({saved})=>saved>0).map(({name})=>name);
+    lines.push(`指定菜品半价(${name.join('，')})，省${receipt.totalSaved}元`);
     lines.push('-----------------------------------');
     lines.push(`总计：${receipt.totalPayPrice}元`);
     lines.push(`===================================`);
