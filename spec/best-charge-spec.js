@@ -231,10 +231,10 @@ describe('Take out food', function () {
       totalPayPrice:24,
       totalSaved:12,
       chosenType:'指定菜品半价'
-    }
+    };
 
     expect(receipt).toEqual(expected);
-  })
+  });
 
   it('should generate best charge when best is 指定菜品半价', function() {
     let inputs = ["ITEM0001 x 1", "ITEM0013 x 2", "ITEM0022 x 1"];
@@ -250,10 +250,11 @@ describe('Take out food', function () {
 -----------------------------------
 总计：25元
 ===================================`.trim()
+    require(`fs`).writeFileSync('2.txt',expected);
     expect(summary).toEqual(expected)
   });
 
-  it('should generate best charge when best is 满30减6元', function() {
+  fit('should generate best charge when best is 满30减6元', function() {
     let inputs = ["ITEM0013 x 4", "ITEM0022 x 1"];
     let summary = bestCharge(inputs).trim();
     let expected = `
