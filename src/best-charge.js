@@ -119,12 +119,11 @@ function buildReceiptString(receipt) {
 -----------------------------------
 `;
   }
-    let result = `
-============= 订餐明细 =============
+  let result = `============= 订餐明细 =============
 ${receiptString}-----------------------------------
 ${middleTotal}总计：${receipt.totalPayPrice}元
 ===================================`
-  ;
+    ;
   require('fs').writeFileSync('./string.txt', result);
   return result;
 }
